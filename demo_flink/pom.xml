@@ -12,7 +12,7 @@
     <artifactId>demo_flink</artifactId>
     <packaging>jar</packaging>
 
-    <name>A Camel Scala Route</name>
+    <name>demo_flink</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -31,7 +31,7 @@
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-streaming-java_2.11</artifactId>
             <version>1.6.1</version>
-            <scope>provided</scope>
+     <!--       <scope>provided</scope>-->
         </dependency>
 
         <dependency>
