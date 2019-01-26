@@ -39,7 +39,9 @@ public class StreamDemoWithParalle {
                 return value;
             }
         });
+
         DataStream<Long> union = text.union(text2);
+
         union.timeWindowAll(Time.seconds(1)).sum(0).print().setParallelism(1);
 
         try {

@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="demo-canal" />
         <module name="demo_flink" />
+        <module name="demo_kafka" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">

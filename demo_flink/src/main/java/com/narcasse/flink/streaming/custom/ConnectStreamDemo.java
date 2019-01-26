@@ -1,9 +1,13 @@
 package com.narcasse.flink.streaming.custom;
 
-/*
 
+
+/**
+ * connect
+ * 和union类似，但是只能连接两个流，两个流的数据类型可以不同，会对两个流中的数据应用不同的处理方法
+ *
+ *
  */
-
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.streaming.api.datastream.ConnectedStreams;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
