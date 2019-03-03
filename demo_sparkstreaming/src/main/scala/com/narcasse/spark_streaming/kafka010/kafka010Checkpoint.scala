@@ -5,7 +5,7 @@ import java.nio.charset.Charset
 
 import com.google.common.io.Files
 import org.apache.kafka.common.serialization.StringDeserializer
-import org.apache.spark.SparkConf
+import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.kafka010._
 import org.apache.spark.streaming.{Seconds, StreamingContext, Time}
@@ -45,6 +45,9 @@ object kafka010Checkpoint {
         ,"/opt/jars/kafka-clients-0.10.2.2.jar"
         ,"/opt/jars/kafka_2.11-0.10.2.2.jar"))
     val ssc = new StreamingContext(sparkConf, Seconds(5))
+    val sc = new SparkContext(sparkConf)
+    val aar1 = Array(1,2)
+    sc.broadcast(aar1)
 
     ssc.checkpoint(checkpointDirectory)
     //    使用broker和topic创建DirectStream
@@ -56,6 +59,7 @@ object kafka010Checkpoint {
       "auto.offset.reset" -> "latest",
       "enable.auto.commit"->(false: java.lang.Boolean))
     // 没有接口提供 offset
+
     val messages = KafkaUtils.createDirectStream[String, String](
       ssc,
       LocationStrategies.PreferConsistent,
@@ -66,6 +70,7 @@ object kafka010Checkpoint {
     //     messages.checkpoint(Seconds(20))
 
     /* 超时*/
+    messages.persist()
     def updateFn(newVal :Seq[Int], stateVal : Option[Int]) :Option[Int] = {
       stateVal match {
         case Some(state) =>
@@ -82,6 +87,7 @@ object kafka010Checkpoint {
     messages.map(_.value()).flatMap(_.split(" ")).map((_,1)).
       updateStateByKey(updateFn _).checkpoint( Seconds(20)) //只需要checkpoint状态更新流产生的rdd
       .foreachRDD(rdd=>{
+
       rdd.keys.collect().foreach(println)
       println("============")
     })

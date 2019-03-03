@@ -47,61 +47,61 @@ object kafka010UpstateBykey {
 
      /* 超时 前提条件是每个批次无论状态里的key是否有最新的值，都会为所有已存在的key调用update函数*/
      /* key 超过20s没出现就删除*/
-     def updateFn(newVals :Seq[JSONObject], stateVal : Option[JSONObject]) :Option[JSONObject] = {
-        stateVal match {
-          case Some(state) =>
-            if(newVals.nonEmpty){
-              val newVal = newVals.head
-              Some(newVal)
-            }else{
-              // 无新值，就判断key是否超时
-              val stateTime = state.getLong("timestamp")
-              val diffTime = System.currentTimeMillis()-stateTime
-              if(diffTime > 20000){
-                None
-              }else{
-                stateVal
-              }
-            }
-          case None =>
-            Some(newVals.head)
-        }
-    }
-      messages.map(_.value()).map(each =>{
-        val json = JSONObject.fromObject(each)
-        val id = json.getInt("id")
-        (id,json)
-      }).updateStateByKey(updateFn _).checkpoint(Seconds(20)) //只需要checkpoint状态更新流产生的rdd
-        .foreachRDD(rdd=>{
-          rdd.keys.collect().foreach(println)
-          println("=============>")
-        })
+//     def updateFn(newVals :Seq[JSONObject], stateVal : Option[JSONObject]) :Option[JSONObject] = {
+//        stateVal match {
+//          case Some(state) =>
+//            if(newVals.nonEmpty){
+//              val newVal = newVals.head
+//              Some(newVal)
+//            }else{
+//              // 无新值，就判断key是否超时
+//              val stateTime = state.getLong("timestamp")
+//              val diffTime = System.currentTimeMillis()-stateTime
+//              if(diffTime > 20000){
+//                None
+//              }else{
+//                stateVal
+//              }
+//            }
+//          case None =>
+//            Some(newVals.head)
+//        }
+//    }
+//      messages.map(_.value()).map(each =>{
+//        val json = JSONObject.fromObject(each)
+//        val id = json.getInt("id")
+//        (id,json)
+//      }).updateStateByKey(updateFn _).checkpoint(Seconds(20)) //只需要checkpoint状态更新流产生的rdd
+//        .foreachRDD(rdd=>{
+//          rdd.keys.collect().foreach(println)
+//          println("=============>")
+//        })
 
 
      /*给定初始RDD
      * 有时候需要给每一个key以初始值
      * 初始值RDD必然会被删除
      **/
-//     def updateFn(newVal :Seq[Int], stateVal : Option[Int]) :Option[Int] = {
-//       stateVal match {
-//         case Some(state) =>
-//           val res = state + newVal.sum
-//           if (res <= 2) {
-//              None
-//           } else {
-//             Some(res)
-//           }
-//         case None =>
-//           Some(newVal.sum)
-//       }
-//     }
-//     val initRDD = ssc.sparkContext.parallelize(Array(("1",2), ("30",1), ("20",14)))
-//     messages.map(_.value()).flatMap(_.split(" ")).map((_,1))
-//       .updateStateByKey(updateFn _,new HashPartitioner(2),initRDD).checkpoint( Seconds(20)) //只需要checkpoint状态更新流产生的rdd
-//       .foreachRDD(rdd=>{
-//       rdd.keys.collect().foreach(println)
-//       println("======>")
-//     })
+     def updateFn(newVal :Seq[Int], stateVal : Option[Int]) :Option[Int] = {
+       stateVal match {
+         case Some(state) =>
+           val res = state + newVal.sum
+           if (res <= 2) {
+              None
+           } else {
+             Some(res)
+           }
+         case None =>
+           Some(newVal.sum)
+       }
+     }
+     val initRDD = ssc.sparkContext.parallelize(Array(("1",2),("1",1), ("30",3), ("20",14)))
+     messages.map(_.value()).flatMap(_.split(" ")).map((_,1))
+       .updateStateByKey(updateFn _,new HashPartitioner(2),initRDD).checkpoint( Seconds(20)) //只需要checkpoint状态更新流产生的rdd
+       .foreachRDD(rdd=>{
+       rdd.keys.collect().foreach(println)
+       println("======>")
+     })
 
       //    启动流
       ssc.start()

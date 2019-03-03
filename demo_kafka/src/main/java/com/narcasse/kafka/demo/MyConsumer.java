@@ -6,6 +6,7 @@ import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.TopicPartition;
 
 import java.util.Arrays;
 import java.util.Properties;
@@ -27,7 +28,7 @@ public class MyConsumer {
 //        props.put("enable.auto.commit", "true");
         props.put("enable.auto.commit", "false");
 //        props.put("auto.commit.interval.ms", "1000");
-        props.put("auto.offset.reset", "earliest");
+        props.put("auto.offset.reset", "latest");
 
         //consumer每次发起fetch请求时,从服务器读取的数据量
         props.put("max.partition.fetch.bytes", "1000");
@@ -46,11 +47,16 @@ public class MyConsumer {
 
         //第三步：订阅消息,指定topic
         consumer.subscribe(Arrays.asList("test"));
+        TopicPartition topicPartition = new TopicPartition("test",0);
 
         boolean stop = false;
-
+        // 是从指定offset进行消费
+        //consumer.poll(100);
+        //consumer.seek(topicPartition,100);
         while (!stop) {
             try {
+                //下一次的offset
+                //System.out.println("下一次的offset:"+consumer.position(topicPartition));
                 //第四步：消费消息
                 ConsumerRecords<String, Customer> records = consumer.poll(100);
 

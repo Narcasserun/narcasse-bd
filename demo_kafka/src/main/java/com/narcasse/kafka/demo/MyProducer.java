@@ -3,6 +3,7 @@ package com.narcasse.kafka.demo;
 
 import com.narcasse.kafka.serde.Customer;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 
@@ -19,7 +20,7 @@ public class MyProducer {
         props.put("bootstrap.servers", "ubuntu1:9092");
 
         //是否确认broker完全接收消息：[all, -1, 0, 1]
-        props.put("acks", "1");
+        props.put("acks", "0");
 
         //失败后消息重发的次数：可能导致消息的次序发生变化
         props.put("retries", 3);
@@ -41,7 +42,7 @@ public class MyProducer {
 
         //重新设置分区器
 //        props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG,"com.gupao.kafka.partition.CustomerPartitioner");
-
+        props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, "com.narcasse.kafka.partition.MyPartitioner");
         //第二步：创建KafkaProducer
         KafkaProducer<String, Customer> producer = new KafkaProducer(props);
 

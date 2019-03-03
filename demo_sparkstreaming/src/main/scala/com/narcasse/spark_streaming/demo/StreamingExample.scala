@@ -6,10 +6,10 @@ trait StreamingExample extends App {
 
   Logger.getRootLogger.setLevel(Level.WARN)
 
-  val hostname = "localhost"
+  val hostname = "ubuntu1"
   val port = 9999
-  val checkpointDir = "spark_streaming/checkpoint"
-  val outputDir = "spark_streaming/output"
-  val inputDir = "spark_streaming/input"
+  val checkpointDir = "C:\\logs\\streaming\\checkpoint"
+  val outputDir = "C:\\logs\\streaming\\output"
+  val inputDir = "C:\\logs\\streaming\\input"
 
 }

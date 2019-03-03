@@ -2,7 +2,7 @@ package com.narcasse.spark_streaming.homework
 
 
 import com.narcasse.spark_streaming.demo.StreamingExample
-import org.apache.spark.SparkConf
+import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming.{Seconds, State, StateSpec, StreamingContext}
 
@@ -14,6 +14,8 @@ object MapWithStateVSUpdateStateByKey extends StreamingExample {
   val sparkConf = new SparkConf().setMaster("local[3]").setAppName("NetworkWordCount")
   val ssc = new StreamingContext(sparkConf, Seconds(1))
   ssc.checkpoint(checkpointDir)
+  val sc=new SparkContext(sparkConf)
+  sc.setCheckpointDir()
 
   val lines = ssc.socketTextStream("localhost", 9999, StorageLevel.MEMORY_AND_DISK_SER)
 

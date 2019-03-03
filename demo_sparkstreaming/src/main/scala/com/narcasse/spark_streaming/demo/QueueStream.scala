@@ -29,7 +29,6 @@ object QueueStream extends StreamingExample {
   //5、启动应用程序
   ssc.start()
 
-
   //构造rddQueue
   for (i <- 1 to 30) {
     rddQueue.synchronized {

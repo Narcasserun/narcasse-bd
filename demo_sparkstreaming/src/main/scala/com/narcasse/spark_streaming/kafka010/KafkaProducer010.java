@@ -1,6 +1,5 @@
 package com.narcasse.spark_streaming.kafka010;
 
-import net.sf.json.JSONObject;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -43,15 +42,15 @@ public class KafkaProducer010 {
 		list.add("redis");
 
 //		for(int j = 0;j < 100;j++)
-		for(int i = 0; i < 6; i++){
+		for(int i = 0; i < 100; i++){
 
-//			String send = points.nextInt(2)+" "+points.nextInt(2);
-			JSONObject json = new JSONObject();
-			json.put("id",i);
-			json.put("timestamp",System.currentTimeMillis());
-			producer.send(new ProducerRecord<String, String>("upstate", json.toString()));
+			String send = points.nextInt(4)+" "+points.nextInt(2);
+//			JSONObject json = new JSONObject();
+//			json.put("id",i);
+//			json.put("timestamp",System.currentTimeMillis());
+			producer.send(new ProducerRecord<String, String>("test", send));
 //
-			System.out.println("");
+			System.out.println(send);
 //			producer.send(new ProducerRecord<String, String>("alluxioTest", (String) list.get(points.nextInt(7))));
 
 			try {

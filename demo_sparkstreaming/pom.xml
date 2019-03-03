@@ -19,11 +19,6 @@
         <kraps-rpc_2.11.version>1.0.0</kraps-rpc_2.11.version>
         <scala.version>2.11.8</scala.version>
     </properties>
-
-
-
-
-
     <dependencies>
 
         <!-- https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine -->
