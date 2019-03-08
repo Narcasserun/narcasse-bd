@@ -1,0 +1,12 @@
+{
+  "mysql": {
+    "host": "gp-bd-master01",
+    "port": 3306,
+    "user": "wuchen",
+    "password": "wuchen123456",
+    "database": "wuchen"
+  }
+}
+
+
+
